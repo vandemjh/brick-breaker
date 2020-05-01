@@ -11,12 +11,12 @@ confused too.
 #include <iostream>
 
 using namespace std;
-bool debug = true;
+bool debug = false;
 
 GLfloat light_diffuse[] = {1.0, 1.0, 0.5, 1.0};  /* Color diffuse light. */
 GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0}; /* Infinite light location. */
 
-Group bricks(10);
+Group bricks(2);
 
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -28,7 +28,8 @@ void init() {
   // glEnable(GL_AUTO_NORMAL);
 
   // bricks.push(new Brick());
-  bricks.push(new Brick(1,1,1,.2));
+  bricks.push(new Brick(0, 0, 0, .2));
+  bricks.print();
 
   /* Enable a single OpenGL light. */
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);

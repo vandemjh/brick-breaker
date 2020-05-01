@@ -2,6 +2,8 @@
 #ifndef GROUP
 #define GROUP
 #include "Brick.cpp"
+
+#include <iostream>
 using namespace std;
 
 class Group {
@@ -14,6 +16,7 @@ public:
 
   Brick pop();
   void draw();
+  void print();
 
 private:
   int count;
@@ -22,7 +25,12 @@ private:
 Group::Group(int size) {
   this->size = size;
   count = 0;
+  // array = new Brick[size] instantiates all the bricks!
+  // array[size] = {0};
   array = new Brick[size];
+  // for (int i=0; i < size; i++)
+  // &array[i] = NULL;
+  // array = array;
 }
 void Group::push(Brick b) { array[count++] = b; }
 void Group::push(Brick *b) { array[count++] = *b; }
@@ -31,10 +39,25 @@ Brick Group::pop() { return array[count--]; }
 // Draws all elements of the Group
 void Group::draw() {
   for (int i = 0; i < size; i++) {
-    try {
-      array[i].draw();
-    } catch (...) {
-    }
+    if (&array[i] != NULL)
+      try {
+        array[i].draw();
+      } catch (...) {
+      }
   }
+}
+
+void Group::print() {
+  std::cout << "--- Group ---\n"
+            << "count: " << count << "\n";
+  for (int i = 0; i < size; i++) {
+    if (&array[i] != NULL)
+      try {
+        std::cout << i << " - " << typeid(array[i]).name()
+                  << "\nsize: " << array[i].size << "\n"; // << "\tposition: ";
+      } catch (...) {
+      }
+  }
+  std::cout << "--- ---\n";
 }
 #endif
