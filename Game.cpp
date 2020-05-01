@@ -1,7 +1,7 @@
 /*
 Jack Vandemeulebroecke
 
-Hey you, why are you looking at the source code, get outta here before you get
+Hey why are you looking at the source code, get outta here before you get
 confused too.
 */
 
@@ -13,20 +13,23 @@ confused too.
 using namespace std;
 bool debug = true;
 
-GLfloat light_diffuse[] = {1.0, 1.0, 0.5, 1.0};  /* Red diffuse light. */
+GLfloat light_diffuse[] = {1.0, 1.0, 0.5, 1.0};  /* Color diffuse light. */
 GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0}; /* Infinite light location. */
 
-Brick b;
 Group bricks(10);
 
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  b.draw();
+  bricks.draw();
   glutSwapBuffers();
 }
 
 void init() {
-  b.init();
+  // glEnable(GL_AUTO_NORMAL);
+
+  // bricks.push(new Brick());
+  bricks.push(new Brick(1,1,1,.2));
+
   /* Enable a single OpenGL light. */
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -38,9 +41,15 @@ void init() {
 
   /* Setup the view of the cube. */
   glMatrixMode(GL_PROJECTION);
-  gluPerspective(/* field of view in degree */ 40.0,
-                 /* aspect ratio */ 1.0,
-                 /* Z near */ 1.0, /* Z far */ 10.0);
+  gluPerspective(
+      // field of view (degrees)
+      40.0,
+      // aspect ratio
+      1.0,
+      // near
+      1.0,
+      // far
+      10.0);
   glMatrixMode(GL_MODELVIEW);
   gluLookAt(0.0, 0.0, 5.0, /* eye is at (0,0,5) */
             0.0, 0.0, 0.0, /* center is at (0,0,0) */
@@ -70,5 +79,5 @@ int main(int argc, char **argv) {
   glutKeyboardFunc(keyboard);
   init();
   glutMainLoop();
-  return 0; /* ANSI C requires main to return int. */
+  return 0;
 }
