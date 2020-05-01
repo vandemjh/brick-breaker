@@ -9,12 +9,12 @@ using namespace std;
 class Group {
 public:
   int size;
-  Brick *array;
+  Brick **array;
   Group(int size);
   void push(Brick b);
   void push(Brick *b);
 
-  Brick pop();
+  Brick* pop();
   void draw();
   void print();
 
@@ -27,21 +27,21 @@ Group::Group(int size) {
   count = 0;
   // array = new Brick[size] instantiates all the bricks!
   // array[size] = {0};
-  array = new Brick[size];
+  array = new Brick*[size];
   // for (int i=0; i < size; i++)
   // &array[i] = NULL;
   // array = array;
 }
-void Group::push(Brick b) { array[count++] = b; }
-void Group::push(Brick *b) { array[count++] = *b; }
-Brick Group::pop() { return array[count--]; }
+void Group::push(Brick b) { *array[count++] = b; }
+void Group::push(Brick *b) { *array[count++] = *b; }
+Brick* Group::pop() { return array[count--]; }
 
 // Draws all elements of the Group
 void Group::draw() {
   for (int i = 0; i < size; i++) {
     if (&array[i] != NULL)
       try {
-        array[i].draw();
+        array[i]->draw();
       } catch (...) {
       }
   }
@@ -53,8 +53,8 @@ void Group::print() {
   for (int i = 0; i < size; i++) {
     if (&array[i] != NULL)
       try {
-        std::cout << i << " - " << typeid(array[i]).name()
-                  << "\nsize: " << array[i].size << "\n"; // << "\tposition: ";
+        std::cout << i << " - " << typeid(*array[i]).name()
+                  << "\nsize: " << array[i]->size << "\n"; // << "\tposition: ";
       } catch (...) {
       }
   }
