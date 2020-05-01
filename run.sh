@@ -1,4 +1,5 @@
 # Jack Vandemeulebroecke
 # Tell the compiler to use OpenGL and GLUT
-g++ cube.c -o cube -lGL -lGLU -lglut
-./cube
+rm brick-breaker
+g++ Game.cpp -o brick-breaker -lGL -lGLU -lglut
+./brick-breaker
