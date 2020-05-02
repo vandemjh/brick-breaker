@@ -20,10 +20,11 @@ class Group {
 	void push(Brick b);
 	void push(Brick *b);
 
-	bool collision(Ball ball);
+	bool collision(Ball *ball);
 	Brick *pop();
 	void draw();
 	void print();
+	bool isEmpty();
 	~Group();
 
       private:
@@ -99,29 +100,31 @@ float distance(float x1, float y1, float z1, float x2, float y2, float z2) {
 float distance(Brick b1, Brick b2) { return distance(b1.x, b1.y, b1.z, b2.x, b2.y, b2.z); }
 float distance(float x1, float y1, float z1, Brick b2) { return distance(x1, y1, z1, b2.x, b2.y, b2.z); }
 
-bool Group::collision(Ball ball) {
+bool Group::collision(Ball *ball) {
 	for (int i = 0; i < this->count; i++) {
 		if (
-		    children[i]->collision(ball)) {
+		    children[i]->collision(*ball)) {
 			// Calculates which face is being collided with
+			float centerDistance = distance(*children[i], *ball);
+			float xStartDistance = distance(children[i]->xStart, children[i]->y, children[i]->z, *ball);
+			float xEndDistance = distance(children[i]->xEnd, children[i]->y, children[i]->z, *ball);
+			float yStartDistance = distance(children[i]->x, children[i]->yStart, children[i]->z, *ball);
+			float yEndDistance = distance(children[i]->x, children[i]->yEnd, children[i]->z, *ball);
+			float zStartDistance = distance(children[i]->x, children[i]->y, children[i]->zStart, *ball);
+			float zEndDistance = distance(children[i]->x, children[i]->y, children[i]->zEnd, *ball);
+
 			if (
-			    distance(children[i]->xStart, children[i]->y, children[i]->z, ball) <
-			    distance(*children[i], ball) ||
-			    distance(children[i]->xEnd, children[i]->y, children[i]->z, ball) <
-			    			    distance(*children[i], ball))
-				ball.rightMomentum = !ball.rightMomentum;
+			    xStartDistance < centerDistance ||
+			    xEndDistance < centerDistance)
+				ball->rightMomentum = !ball->rightMomentum;
 			if (
-			    distance(children[i]->x, children[i]->yStart, children[i]->z, ball) <
-			    distance(*children[i], ball) ||
-			    distance(children[i]->x, children[i]->yEnd, children[i]->z, ball) <
-			    distance(*children[i], ball))
-				ball.upMomentum = !ball.upMomentum;
+			    yStartDistance < centerDistance ||
+			    yEndDistance < centerDistance)
+				ball->upMomentum = !ball->upMomentum;
 			if (
-			    distance(children[i]->x, children[i]->y, children[i]->zStart, ball) <
-			    distance(*children[i], ball) ||
-			    distance(children[i]->x, children[i]->y, children[i]->zEnd, ball) <
-			    distance(*children[i], ball))
-				ball.forwardMomentum = !ball.forwardMomentum;
+			    zStartDistance < centerDistance ||
+			    zEndDistance < centerDistance)
+				ball->forwardMomentum = !ball->forwardMomentum;
 
 			// ball.upMomentum = !ball.upMomentum;
 			children[i]->destroyed = true;
@@ -133,6 +136,14 @@ bool Group::collision(Ball ball) {
 		}
 	}
 	return false;
+}
+
+bool Group::isEmpty() {
+	for (int i = 0; i < size; i++) {
+		if (children[i]->id != -1 && !children[i]->destroyed)
+			return false;
+	}
+	return true;
 }
 
 // bool Group::find(std::function<void(bool)> f) {

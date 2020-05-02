@@ -13,11 +13,13 @@ confused too.
 #include <cmath>
 #include <iostream>
 
+
 using namespace std;
 
 /* --- Utility Functions --- */
 float visibleHeight(float depth);
 float visibleWidth(float depth);
+void placeBlocks(int layers);
 
 /* --- Environment variables --- */
 float lightColor[] = {1.0, 1.0, 1.0, 0.0};      // White light
@@ -28,7 +30,7 @@ float center[] = {0.0, 0.0, 0.0};
 /* --- Constants --- */
 const bool DEBUG = true;
 const float BRICK_SIZE = .2;
-const float WALL_SIZE = .25;
+const float WALL_SIZE = .20;
 const float ASPECT_RATIO = 1.0;
 const float FIELD_OF_VIEW = 90.0; // FOV in degrees
 const float PADDLE_SPEED = 0.1;
@@ -43,12 +45,13 @@ float BLUE[4] = {0.0, 0.8, 0.8, 0.0};
 int visibleWidthAtZero;
 int visibleHeightAtZero;
 int score = 0;
+int level = 0;
 
 /* --- Initiate --- */
 Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
 Ball ball(BALL_SIZE, BALL_SPEED);
 Group bounds(1000);
-Group bricks(10000);
+Group bricks(1000);
 
 /* --- Draw the scene --- */
 void display() {
@@ -57,7 +60,7 @@ void display() {
 	paddle.draw();
 	bricks.draw();
 	ball.draw();
-	if (bricks.collision(ball))
+	if (bricks.collision(&ball))
 		score++;
 	if (paddle.collision(ball)) {
 		ball.rightMomentum = ball.x < paddle.x;
@@ -69,14 +72,16 @@ void display() {
 		     << "Score: " << score << endl;
 		exit(0);
 	}
-	// cout << ball.collision(0,0,0,1) << endl;
+	if (bricks.isEmpty())
+		placeBlocks(level++);
 
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
 
-void init() {
-	// This first part draws the boundary of the game
+void placeBlocks(int layers) {
+		// This first part draws the boundary of the game
+	// Group bricks(1000);
 	visibleWidthAtZero = (int)visibleWidth(0);
 	visibleHeightAtZero = (int)visibleHeight(0);
 	for (int x = -visibleWidthAtZero; x <= visibleWidthAtZero; x++)
@@ -85,8 +90,18 @@ void init() {
 				if ((x == -visibleWidthAtZero || x == visibleWidthAtZero || y == -visibleHeightAtZero || y == visibleHeightAtZero) && y != -visibleWidthAtZero)
 					bounds.push(new Brick(x, y, z, WALL_SIZE, GRAY));
 				else if (
-				    x >= -visibleWidthAtZero + 5 && x <= visibleWidthAtZero - 5 && y >= -visibleHeightAtZero + 5 && y <= visibleHeightAtZero - 5 && z >= -1 && z <= 1 && y > 0)
+				    x >= -visibleWidthAtZero + 5 + (layers + 3)
+				     && x <= visibleWidthAtZero - 5 + (layers - 3) 
+				     && y >= -visibleHeightAtZero + 5 + (layers + 3) 
+				     && y <= visibleHeightAtZero - 5 + (layers - 3)
+				     && z >= layers && z <= layers
+				       && y > 0)
 					bricks.push(new Brick(x, y, z, BRICK_SIZE, BLUE));
+}
+
+void init() {
+	placeBlocks(level++);
+	bricks.print();
 
 	/* --- Glut settings ---*/
 	// Lighting
@@ -112,6 +127,8 @@ void init() {
 		  0.0); // up is in positive Y direction
 }
 
+
+
 void keyboard(unsigned char c, int x, int y) {
 	if (DEBUG)
 		cout << "key pressed: " << std::to_string(c) << "\nx is " << x << "\ny is " << y << "\n";
@@ -134,6 +151,7 @@ void keyboard(unsigned char c, int x, int y) {
 }
 
 int main(int argc, char **argv) {
+	level = atoi(argv[0]);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutCreateWindow("Brick Breaker");

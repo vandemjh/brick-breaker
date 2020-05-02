@@ -2,6 +2,7 @@
 #define BALL
 #include "Brick.cpp"
 #include <GL/glut.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -43,7 +44,7 @@ void Ball::draw() {
 //Updates the vertices matrix
 void Ball::update() {
 	x += speed * (rightMomentum ? -1 : 1);
-	if (x < -7 || x > 7)
+	if (x < -8 || x > 8)
 		rightMomentum = !rightMomentum;
 	y += speed * (upMomentum ? -1 : 1);
 	// y < -8 ||
