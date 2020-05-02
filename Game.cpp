@@ -13,7 +13,6 @@ confused too.
 #include <cmath>
 #include <iostream>
 
-
 using namespace std;
 
 /* --- Utility Functions --- */
@@ -28,7 +27,7 @@ float camera[] = {0.0, 0.0, 10.0};
 float center[] = {0.0, 0.0, 0.0};
 
 /* --- Constants --- */
-const bool DEBUG = true;
+const bool DEBUG = false;
 const float BRICK_SIZE = .2;
 const float WALL_SIZE = .20;
 const float ASPECT_RATIO = 1.0;
@@ -80,7 +79,7 @@ void display() {
 }
 
 void placeBlocks(int layers) {
-		// This first part draws the boundary of the game
+	// This first part draws the boundary of the game
 	// Group bricks(1000);
 	visibleWidthAtZero = (int)visibleWidth(0);
 	visibleHeightAtZero = (int)visibleHeight(0);
@@ -90,18 +89,12 @@ void placeBlocks(int layers) {
 				if ((x == -visibleWidthAtZero || x == visibleWidthAtZero || y == -visibleHeightAtZero || y == visibleHeightAtZero) && y != -visibleWidthAtZero)
 					bounds.push(new Brick(x, y, z, WALL_SIZE, GRAY));
 				else if (
-				    x >= -visibleWidthAtZero + 5 + (layers + 3)
-				     && x <= visibleWidthAtZero - 5 + (layers - 3) 
-				     && y >= -visibleHeightAtZero + 5 + (layers + 3) 
-				     && y <= visibleHeightAtZero - 5 + (layers - 3)
-				     && z >= layers && z <= layers
-				       && y > 0)
+				    x >= -visibleWidthAtZero + 5 - (layers - 3) && x <= visibleWidthAtZero - 5 + (layers - 3) && y >= -visibleHeightAtZero + 5 - (layers - 3) && y <= visibleHeightAtZero - 5 + (layers - 3) && z >= -layers && z <= layers && y > 0)
 					bricks.push(new Brick(x, y, z, BRICK_SIZE, BLUE));
 }
 
 void init() {
-	placeBlocks(level++);
-	bricks.print();
+	placeBlocks(level);
 
 	/* --- Glut settings ---*/
 	// Lighting
@@ -127,8 +120,6 @@ void init() {
 		  0.0); // up is in positive Y direction
 }
 
-
-
 void keyboard(unsigned char c, int x, int y) {
 	if (DEBUG)
 		cout << "key pressed: " << std::to_string(c) << "\nx is " << x << "\ny is " << y << "\n";
@@ -151,7 +142,7 @@ void keyboard(unsigned char c, int x, int y) {
 }
 
 int main(int argc, char **argv) {
-	level = atoi(argv[0]);
+	// Get level from command line args
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutCreateWindow("Brick Breaker");
@@ -169,6 +160,9 @@ int main(int argc, char **argv) {
 	if (DEBUG)
 		cout << "Visible depth at z=10: " << visibleWidth(10) << endl;
 
+	if (argc == 2)
+		level = atoi(argv[1]);
+	// cout << level;
 	init();
 	glutMainLoop();
 	return 0;
