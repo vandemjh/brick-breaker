@@ -20,6 +20,7 @@ class Group {
 	Brick *pop();
 	void draw();
 	void print();
+	~Group();
 
       private:
 	int count;
@@ -84,4 +85,9 @@ void Group::print() {
 	}
 	std::cout << "---\n";
 }
+
+Group::~Group() {
+	delete(children);
+}
+
 #endif

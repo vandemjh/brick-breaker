@@ -46,9 +46,10 @@ Brick::Brick(float size) : Brick(0, 0, 0, size) {}
 
 Brick::Brick(float x, float y, float z, float size) { init(x, y, z, size); }
 Brick::~Brick() {
-	free(this->normals);
-	free(this->faces);
-	free(this->vertices);
+	// This method is causing paddle to segfault when the app is quit
+	// free(normals);
+	// free(faces);
+	// free(vertices);
 }
 
 void Brick::init(float x, float y, float z, float size) {

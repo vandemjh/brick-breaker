@@ -29,9 +29,10 @@ const float BRICK_SIZE = .2;
 const float ASPECT_RATIO = 1.0;
 // FOV in degrees
 const float FIELD_OF_VIEW = 90.0;
+const float PADDLE_SIZE = .2;
 
+Paddle paddle(PADDLE_SIZE);
 Group bounds(10000);
-Paddle paddle;
 
 
 void display() {
