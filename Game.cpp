@@ -36,7 +36,7 @@ const float BALL_SIZE = 0.2;
 
 Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
 Ball ball(BALL_SPEED, BALL_SIZE);
-Group bounds(100);
+Group bounds(1000);
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
