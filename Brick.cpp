@@ -9,14 +9,14 @@ using namespace std;
 static int brickCount = 0;
 class Brick {
       public:
-	float normals[6][3] = { // Normals
+	float normals[6][3] = { // Normals for all faces
 	    {-1.0, 0.0, 0.0},
 	    {0.0, 1.0, 0.0},
 	    {1.0, 0.0, 0.0},
 	    {0.0, -1.0, 0.0},
 	    {0.0, 0.0, 1.0},
 	    {0.0, 0.0, -1.0}};
-	int faces[6][4] = {/* Vertex indices for the 6 faces of a cube. */
+	int faces[6][4] = { //Vertex indices for the 6 faces of a cube.
 			   {0, 1, 2, 3},
 			   {3, 2, 6, 7},
 			   {7, 6, 5, 4},
@@ -58,12 +58,12 @@ void Brick::init(float x, float y, float z, float size) {
 	this->z = z;
 
 	this->size = size;
-	vertices[0][0] = vertices[1][0] = vertices[2][0] = vertices[3][0] = x - (size + size); //+ -1
-	vertices[4][0] = vertices[5][0] = vertices[6][0] = vertices[7][0] = x + (size + size); // + 1
-	vertices[0][1] = vertices[1][1] = vertices[4][1] = vertices[5][1] = y - (size + size); //+ -1
-	vertices[2][1] = vertices[3][1] = vertices[6][1] = vertices[7][1] = y + (size + size); // + 1
-	vertices[0][2] = vertices[3][2] = vertices[4][2] = vertices[7][2] = z + (size + size); //+ 1
-	vertices[1][2] = vertices[2][2] = vertices[5][2] = vertices[6][2] = z - (size + size); // + -1
+	vertices[0][0] = vertices[1][0] = vertices[2][0] = vertices[3][0] = x - (size + size);
+	vertices[4][0] = vertices[5][0] = vertices[6][0] = vertices[7][0] = x + (size + size); 
+	vertices[0][1] = vertices[1][1] = vertices[4][1] = vertices[5][1] = y - (size + size);
+	vertices[2][1] = vertices[3][1] = vertices[6][1] = vertices[7][1] = y + (size + size); 
+	vertices[0][2] = vertices[3][2] = vertices[4][2] = vertices[7][2] = z + (size + size);
+	vertices[1][2] = vertices[2][2] = vertices[5][2] = vertices[6][2] = z - (size + size);
 }
 
 void Brick::draw() {

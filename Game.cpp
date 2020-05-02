@@ -7,6 +7,7 @@ confused too.
 
 #include "Brick.cpp"
 #include "Group.cpp"
+#include "Paddle.cpp"
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
@@ -30,12 +31,13 @@ const float ASPECT_RATIO = 1.0;
 const float FIELD_OF_VIEW = 90.0;
 
 Group bounds(10000);
-
+Paddle paddle;
 
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	bounds.draw();
+	paddle.draw();
 	glutSwapBuffers();
 }
 
