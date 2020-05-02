@@ -39,6 +39,7 @@ class Brick {
 	~Brick();
 	Brick(float size);
 	Brick(float x, float y, float z, float size);
+	bool collision(float x, float y, float z, float size);
 };
 
 Brick::Brick() { id = -1; }
@@ -94,11 +95,20 @@ string Brick::toString() {
 	       std::to_string(this->size) +
 	       "\n" +
 	       "\tposition: (" +
-	       std::to_string((x)) + //round
+	       std::to_string((x)) +	//round
 	       ", " + std::to_string((y)) + //round
 	       ", " +
 	       std::to_string((z)) + //round
 	       ")\n";
+}
+
+bool Brick::collision(float x, float y, float z, float size) {
+	return this->x + this->size < x + size &&
+	       this->x - this->size > x - size &&
+	       this->y + this->size < y + size &&
+	       this->y - this->size > y - size &&
+	       this->z + this->size < z + size &&
+	       this->z - this->size > z - size;
 }
 
 #endif

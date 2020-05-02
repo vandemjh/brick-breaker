@@ -5,10 +5,10 @@ Hey why are you looking at the source code, get outta here before you get
 confused too.
 */
 
+#include "Ball.cpp"
 #include "Brick.cpp"
 #include "Group.cpp"
 #include "Paddle.cpp"
-#include "Ball.cpp"
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
@@ -25,24 +25,36 @@ float camera[] = {0.0, 0.0, 10.0};
 float center[] = {0.0, 0.0, 0.0};
 
 /* --- CONSTANTS --- */
-const bool DEBUG = true;
+const bool DEBUG = false;
 const float BRICK_SIZE = .2;
 const float ASPECT_RATIO = 1.0;
 const float FIELD_OF_VIEW = 90.0; // FOV in degrees
 const float PADDLE_SPEED = 0.1;
 const float PADDLE_SIZE = 0.2;
-const float BALL_SPEED = 0.1;
+const float BALL_SPEED = 0.05;
 const float BALL_SIZE = 0.2;
 
+/* --- Initiate --- */
 Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
-Ball ball(BALL_SPEED, BALL_SIZE);
+Ball ball(BALL_SIZE, BALL_SPEED);
 Group bounds(1000);
 
+/* --- Draw the scene --- */
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	bounds.draw();
 	paddle.draw();
 	ball.draw();
+	if (paddle.collision(ball)) {
+		ball.rightMomentum = ball.x < paddle.x;
+		ball.forwardMomentum = ball.z < paddle.z;
+		ball.upMomentum = !ball.upMomentum;
+	}
+	if (ball.y < -10) {
+		cout << "Loser" << endl;
+		exit(0);
+	}
+	// cout << ball.collision(0,0,0,1) << endl;
 
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -54,7 +66,7 @@ void init() {
 	int visD = (int)visibleHeight(0);
 	for (int x = -visW; x <= visW; x++)
 		for (int y = -visD; y <= visD; y++)
-			if (x == -visW || x == visW || y == -visD || y == visD)
+			if ((x == -visW || x == visW || y == -visD || y == visD) && y != -visW)
 				for (int z = -3; z < 3; z++)
 					bounds.push(new Brick(x, y, z, BRICK_SIZE));
 
@@ -89,16 +101,18 @@ void keyboard(unsigned char c, int x, int y) {
 		cout << paddle.toString();
 	if (c == 'a')
 		paddle.move(true, false, false, false);
-	if (c == 'd')
+	else if (c == 'd')
 		paddle.move(false, true, false, false);
-	if (c == 'w')
+	else if (c == 'w')
 		paddle.move(false, false, true, false);
-	if (c == 's')
+	else if (c == 's')
 		paddle.move(false, false, false, true);
-	if (c == 27)
+	else if (c == 27)
 		exit(0);
-	if (c == 'p')
+	else if (c == 'p')
 		init();
+	else
+		paddle.move(false, false, false, false);
 }
 
 int main(int argc, char **argv) {
