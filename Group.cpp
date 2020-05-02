@@ -87,7 +87,7 @@ void Group::print() {
 }
 
 Group::~Group() {
-	delete(children);
+	delete (children);
 }
 
 #endif
