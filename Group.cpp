@@ -14,7 +14,7 @@ public:
   void push(Brick b);
   void push(Brick *b);
 
-  Brick* pop();
+  Brick *pop();
   void draw();
   void print();
 
@@ -26,20 +26,18 @@ Group::Group(int size) {
   this->size = size;
   count = 0;
   // array = new Brick[size] instantiates all the bricks!
-  // array[size] = {0};
-  array = new Brick*[size];
-  // for (int i=0; i < size; i++)
-  // &array[i] = NULL;
-  // array = array;
+  array = new Brick *[size];
+  for (int i = 0; i < size; i++)
+    array[i] = new Brick();
 }
 void Group::push(Brick b) { *array[count++] = b; }
 void Group::push(Brick *b) { *array[count++] = *b; }
-Brick* Group::pop() { return array[count--]; }
+Brick *Group::pop() { return array[count--]; }
 
 // Draws all elements of the Group
 void Group::draw() {
   for (int i = 0; i < size; i++) {
-    if (&array[i] != NULL)
+    if (array[i] != NULL)
       try {
         array[i]->draw();
       } catch (...) {
@@ -48,13 +46,13 @@ void Group::draw() {
 }
 
 void Group::print() {
-  std::cout << "--- Group ---\n"
-            << "count: " << count << "\n";
+  std::cout << "--- Group "
+            << "count: " << count << " size: " << size << "---\n";
   for (int i = 0; i < size; i++) {
-    if (&array[i] != NULL)
+    if (array[i] != NULL)
       try {
-        std::cout << i << " - " << typeid(*array[i]).name()
-                  << "\nsize: " << array[i]->size << "\n"; // << "\tposition: ";
+        std::cout << i << " - "
+                  << array[i]->toString(); // << typeid(*array[i]).name()
       } catch (...) {
       }
   }
