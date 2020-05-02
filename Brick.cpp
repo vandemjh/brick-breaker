@@ -65,8 +65,8 @@ void Brick::init(float x, float y, float z, float size) {
 	vertices[4][0] = vertices[5][0] = vertices[6][0] = vertices[7][0] = x + size;
 	vertices[0][1] = vertices[1][1] = vertices[4][1] = vertices[5][1] = y - size;
 	vertices[2][1] = vertices[3][1] = vertices[6][1] = vertices[7][1] = y + size;
-	vertices[0][2] = vertices[3][2] = vertices[4][2] = vertices[7][2] = z + size;
 	vertices[1][2] = vertices[2][2] = vertices[5][2] = vertices[6][2] = z - size;
+	vertices[0][2] = vertices[3][2] = vertices[4][2] = vertices[7][2] = z + size;
 }
 
 void Brick::draw() {

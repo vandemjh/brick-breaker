@@ -8,6 +8,7 @@ confused too.
 #include "Brick.cpp"
 #include "Group.cpp"
 #include "Paddle.cpp"
+#include "Ball.cpp"
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
@@ -28,16 +29,21 @@ const bool DEBUG = true;
 const float BRICK_SIZE = .2;
 const float ASPECT_RATIO = 1.0;
 const float FIELD_OF_VIEW = 90.0; // FOV in degrees
+const float PADDLE_SPEED = 0.1;
 const float PADDLE_SIZE = 0.2;
+const float BALL_SPEED = 0.1;
+const float BALL_SIZE = 0.2;
 
-Paddle paddle(PADDLE_SIZE);
-Group bounds(10000);
+Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
+Ball ball(BALL_SPEED, BALL_SIZE);
+Group bounds(100);
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	bounds.draw();
 	paddle.draw();
-	//glutSolidSphere(2, 10, 10);
+	ball.draw();
+
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
@@ -82,13 +88,13 @@ void keyboard(unsigned char c, int x, int y) {
 	if (DEBUG)
 		cout << paddle.toString();
 	if (c == 'a')
-		paddle.move(0.1, 0.0);
+		paddle.move(true, false, false, false);
 	if (c == 'd')
-		paddle.move(-0.1, 0.0);
-	if (c == 's')
-		paddle.move(0.0, -0.1);
+		paddle.move(false, true, false, false);
 	if (c == 'w')
-		paddle.move(0.0, 0.1);
+		paddle.move(false, false, true, false);
+	if (c == 's')
+		paddle.move(false, false, false, true);
 	if (c == 27)
 		exit(0);
 	if (c == 'p')
