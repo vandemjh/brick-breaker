@@ -26,7 +26,7 @@ float camera[] = {0.0, 0.0, 10.0};
 float center[] = {0.0, 0.0, 0.0};
 
 /* --- Constants --- */
-const bool DEBUG = false;
+const bool DEBUG = true;
 const float BRICK_SIZE = .2;
 const float WALL_SIZE = .25;
 const float ASPECT_RATIO = 1.0;
@@ -35,13 +35,14 @@ const float PADDLE_SPEED = 0.1;
 const float PADDLE_SIZE = 0.2;
 const float BALL_SPEED = 0.05;
 const float BALL_SIZE = 0.2;
-const float LOSE_LINE = 10.0;
+const float LOSE_LINE = -10.0;
 float GRAY[4] = {0.8, 0.8, 0.8, 0.0};
-float YELLOW[4] = {0.0, 0.8, 0.8, 0.0};
+float BLUE[4] = {0.0, 0.8, 0.8, 0.0};
 
-/* ---   --- */
+/* --- Game variables  --- */
 int visibleWidthAtZero;
 int visibleHeightAtZero;
+int score = 0;
 
 /* --- Initiate --- */
 Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
@@ -56,13 +57,16 @@ void display() {
 	paddle.draw();
 	bricks.draw();
 	ball.draw();
+	if (bricks.collision(ball))
+		score++;
 	if (paddle.collision(ball)) {
 		ball.rightMomentum = ball.x < paddle.x;
 		ball.forwardMomentum = ball.z < paddle.z;
 		ball.upMomentum = !ball.upMomentum;
 	}
 	if (ball.y < LOSE_LINE) {
-		cout << "Loser" << endl;
+		cout << "Loser!" << endl
+		     << "Score: " << score << endl;
 		exit(0);
 	}
 	// cout << ball.collision(0,0,0,1) << endl;
@@ -77,11 +81,12 @@ void init() {
 	visibleHeightAtZero = (int)visibleHeight(0);
 	for (int x = -visibleWidthAtZero; x <= visibleWidthAtZero; x++)
 		for (int y = -visibleHeightAtZero; y <= visibleHeightAtZero; y++)
-		for (int z = -3; z < 3; z++)
-			if ((x == -visibleWidthAtZero || x == visibleWidthAtZero || y == -visibleHeightAtZero || y == visibleHeightAtZero) && y != -visibleWidthAtZero)
+			for (int z = -3; z < 3; z++)
+				if ((x == -visibleWidthAtZero || x == visibleWidthAtZero || y == -visibleHeightAtZero || y == visibleHeightAtZero) && y != -visibleWidthAtZero)
 					bounds.push(new Brick(x, y, z, WALL_SIZE, GRAY));
-			else
-				if (y > 0) bricks.push(new Brick(x,y,z,BRICK_SIZE, YELLOW));
+				else if (
+				    x >= -visibleWidthAtZero + 5 && x <= visibleWidthAtZero - 5 && y >= -visibleHeightAtZero + 5 && y <= visibleHeightAtZero - 5 && z >= -1 && z <= 1 && y > 0)
+					bricks.push(new Brick(x, y, z, BRICK_SIZE, BLUE));
 
 	/* --- Glut settings ---*/
 	// Lighting

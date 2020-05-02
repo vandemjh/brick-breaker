@@ -20,7 +20,7 @@ class Ball : public Brick {
 Ball::Ball(float size, float speed) : Brick(0, 0, 0, size) {
 	forwardMomentum = false;
 	rightMomentum = false;
-	upMomentum = false;
+	upMomentum = true;
 	this->speed = speed;
 	this->size = size;
 }

@@ -29,6 +29,7 @@ class Brick {
 	float vertices[8][3];
 	float size;
 	int id;
+	bool destroyed;
 	float x;
 	float y;
 	float z;
@@ -36,6 +37,7 @@ class Brick {
 	void draw();
 	string toString();
 	void init(float x, float y, float z, float size, float color[4]);
+	bool collision(Brick ball);
 
 	Brick();
 	~Brick();
@@ -69,6 +71,7 @@ void Brick::init(float x, float y, float z, float size, float color[4]) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+	this->destroyed = false;
 
 	size += size;
 	this->size = size;
@@ -81,7 +84,7 @@ void Brick::init(float x, float y, float z, float size, float color[4]) {
 }
 
 void Brick::draw() {
-	if (id == -1)
+	if (id == -1 || destroyed)
 		return;
 	glBegin(GL_QUADS);
 	for (int i = 0; i < 6; i++) {
@@ -113,6 +116,8 @@ string Brick::toString() {
 }
 
 bool Brick::collision(float x, float y, float z, float size) {
+	if (id == -1)
+		return false;
 	return this->x + this->size > x - size &&
 	       this->x - this->size < x + size &&
 	       this->y + this->size > y - size &&
@@ -120,5 +125,7 @@ bool Brick::collision(float x, float y, float z, float size) {
 	       this->z + this->size > z - size &&
 	       this->z - this->size < z + size;
 }
+
+bool Brick::collision(Brick ball) { return collision(ball.x, ball.y, ball.z, ball.size); }
 
 #endif
