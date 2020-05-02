@@ -52,10 +52,10 @@ void Ball::draw() {
 void Ball::update() {
 	if (leftMomentum && x > -7) x -= speed;
 	if (rightMomentum && x < 7) x += speed;
-	if (forwardMomentum && y > -7) y += speed;
-	if (backwardMomentum && y < 7) y -= speed;
-	if (upMomentum && z > -2) z -= speed;
-	if (downMomentum && z < 2) z += speed;
+	if (upMomentum && y > -2) y -= speed;
+	if (downMomentum && y < 2) y += speed;
+	if (forwardMomentum && z > -7) z += speed;
+	if (backwardMomentum && z < 7) z -= speed;
 }
 
 #endif
