@@ -34,6 +34,15 @@ class Brick {
 	float y;
 	float z;
 
+	// These are used to find what face is closest to the ball
+	// They are never updated for the ball!
+	float xStart;
+	float yStart;
+	float zStart;
+	float xEnd;
+	float yEnd;
+	float zEnd;
+
 	void draw();
 	string toString();
 	void init(float x, float y, float z, float size, float color[4]);
@@ -69,8 +78,14 @@ void Brick::init(float x, float y, float z, float size, float color[4]) {
 	this->color[3] = color[3];
 	this->id = brickCount++;
 	this->x = x;
+	this->xStart = x - size;
+	this->xEnd = x + size;
 	this->y = y;
+	this->yStart = y - size;
+	this->yEnd = y + size;
 	this->z = z;
+	this->zStart = z - size;
+	this->zEnd = z + size;
 	this->destroyed = false;
 
 	size += size;

@@ -90,11 +90,34 @@ void Group::print() {
 	std::cout << "---\n";
 }
 
+float distance(float x1, float y1, float z1, float x2, float y2, float z2) {
+	return sqrt(pow(x2 - x1, 2) +
+		    pow(y2 - y1, 2) +
+		    pow(z2 - z1, 2));
+}
+
+float distance(Brick b1, Brick b2) { return distance(b1.x, b1.y, b1.z, b2.x, b2.y, b2.z); }
+float distance(float x1, float y1, float z1, Brick b2) { return distance(x1, y1, z1, b2.x, b2.y, b2.z); }
+
 bool Group::collision(Ball ball) {
 	for (int i = 0; i < this->count; i++) {
 		if (
 		    children[i]->collision(ball)) {
-		    ball.upMomentum = !ball.upMomentum;
+			// Calculates which face is being collided with
+			if (
+			    distance(children[i]->xStart, children[i]->y, children[i]->z, ball) <
+			    distance(*children[i], ball))
+				ball.rightMomentum = !ball.rightMomentum;
+			if (
+			    distance(children[i]->x, children[i]->yStart, children[i]->z, ball) <
+			    distance(*children[i], ball))
+				ball.upMomentum = !ball.upMomentum;
+			if (
+			    distance(children[i]->x, children[i]->y, children[i]->zStart, ball) <
+			    distance(*children[i], ball))
+				ball.forwardMomentum = !ball.forwardMomentum;
+
+			// ball.upMomentum = !ball.upMomentum;
 			children[i]->destroyed = true;
 			children[i]->size = 0;
 			children[i]->x = -100;
