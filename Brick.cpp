@@ -103,12 +103,12 @@ string Brick::toString() {
 }
 
 bool Brick::collision(float x, float y, float z, float size) {
-	return this->x + this->size < x + size &&
-	       this->x - this->size > x - size &&
-	       this->y + this->size < y + size &&
-	       this->y - this->size > y - size &&
-	       this->z + this->size < z + size &&
-	       this->z - this->size > z - size;
+	return this->x + this->size > x - size &&
+	       this->x - this->size < x + size &&
+	       this->y + this->size > y - size &&
+	       this->y - this->size < y + size &&
+	       this->z + this->size > z - size &&
+	       this->z - this->size < z + size;
 }
 
 #endif

@@ -16,7 +16,7 @@ confused too.
 using namespace std;
 
 float visibleHeight(float depth);
-float visibleDepth(float depth);
+float visibleWidth(float depth);
 
 /* --- Environment variables --- */
 float lightColor[] = {1.0, 1.0, 1.0, 0.0};      // White light
@@ -24,7 +24,7 @@ float lightLocation[] = {0.0, 0.0, -10.0, 0.5}; // Light location
 float camera[] = {0.0, 0.0, 10.0};
 float center[] = {0.0, 0.0, 0.0};
 
-/* --- CONSTANTS --- */
+/* --- Constants --- */
 const bool DEBUG = false;
 const float BRICK_SIZE = .2;
 const float ASPECT_RATIO = 1.0;
@@ -34,10 +34,15 @@ const float PADDLE_SIZE = 0.2;
 const float BALL_SPEED = 0.05;
 const float BALL_SIZE = 0.2;
 
+/* ---   --- */
+int visibleWidthAtZero;
+int visibleHeightAtZero;
+
 /* --- Initiate --- */
 Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
 Ball ball(BALL_SIZE, BALL_SPEED);
 Group bounds(1000);
+Group bricks(1000);
 
 /* --- Draw the scene --- */
 void display() {
@@ -62,11 +67,11 @@ void display() {
 
 void init() {
 	// This first part draws the boundary of the game
-	int visW = (int)visibleDepth(0);
-	int visD = (int)visibleHeight(0);
-	for (int x = -visW; x <= visW; x++)
-		for (int y = -visD; y <= visD; y++)
-			if ((x == -visW || x == visW || y == -visD || y == visD) && y != -visW)
+	visibleWidthAtZero = (int)visibleWidth(0);
+	visibleHeightAtZero = (int)visibleHeight(0);
+	for (int x = -visibleWidthAtZero; x <= visibleWidthAtZero; x++)
+		for (int y = -visibleHeightAtZero; y <= visibleHeightAtZero; y++)
+			if ((x == -visibleWidthAtZero || x == visibleWidthAtZero || y == -visibleHeightAtZero || y == visibleHeightAtZero) && y != -visibleWidthAtZero)
 				for (int z = -3; z < 3; z++)
 					bounds.push(new Brick(x, y, z, BRICK_SIZE));
 
@@ -125,13 +130,13 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(keyboard);
 
 	if (DEBUG)
-		cout << "Visible depth at z=0: " << visibleDepth(0) << endl;
+		cout << "Visible depth at z=0: " << visibleWidth(0) << endl;
 	if (DEBUG)
-		cout << "Visible depth at z=1: " << visibleDepth(1) << endl;
+		cout << "Visible depth at z=1: " << visibleWidth(1) << endl;
 	if (DEBUG)
-		cout << "Visible depth at z=5: " << visibleDepth(5) << endl;
+		cout << "Visible depth at z=5: " << visibleWidth(5) << endl;
 	if (DEBUG)
-		cout << "Visible depth at z=10: " << visibleDepth(10) << endl;
+		cout << "Visible depth at z=10: " << visibleWidth(10) << endl;
 
 	init();
 	glutMainLoop();
@@ -151,7 +156,7 @@ float visibleHeight(float depth) {
 	// return 2 * tan(vFOV / 2) * abs(depth);
 	return tan(vFOV / 2) * abs(depth);
 }
-float visibleDepth(float depth) {
+float visibleWidth(float depth) {
 	const float height = visibleHeight(depth);
 	return height * ASPECT_RATIO;
 }
