@@ -15,6 +15,7 @@ confused too.
 
 using namespace std;
 
+/* --- Utility Functions --- */
 float visibleHeight(float depth);
 float visibleWidth(float depth);
 
@@ -27,12 +28,16 @@ float center[] = {0.0, 0.0, 0.0};
 /* --- Constants --- */
 const bool DEBUG = false;
 const float BRICK_SIZE = .2;
+const float WALL_SIZE = .25;
 const float ASPECT_RATIO = 1.0;
 const float FIELD_OF_VIEW = 90.0; // FOV in degrees
 const float PADDLE_SPEED = 0.1;
 const float PADDLE_SIZE = 0.2;
 const float BALL_SPEED = 0.05;
 const float BALL_SIZE = 0.2;
+const float LOSE_LINE = 10.0;
+float GRAY[4] = {0.8, 0.8, 0.8, 0.0};
+float YELLOW[4] = {0.0, 0.8, 0.8, 0.0};
 
 /* ---   --- */
 int visibleWidthAtZero;
@@ -42,20 +47,21 @@ int visibleHeightAtZero;
 Paddle paddle(PADDLE_SIZE, PADDLE_SPEED);
 Ball ball(BALL_SIZE, BALL_SPEED);
 Group bounds(1000);
-Group bricks(1000);
+Group bricks(10000);
 
 /* --- Draw the scene --- */
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	bounds.draw();
 	paddle.draw();
+	bricks.draw();
 	ball.draw();
 	if (paddle.collision(ball)) {
 		ball.rightMomentum = ball.x < paddle.x;
 		ball.forwardMomentum = ball.z < paddle.z;
 		ball.upMomentum = !ball.upMomentum;
 	}
-	if (ball.y < -10) {
+	if (ball.y < LOSE_LINE) {
 		cout << "Loser" << endl;
 		exit(0);
 	}
@@ -71,9 +77,11 @@ void init() {
 	visibleHeightAtZero = (int)visibleHeight(0);
 	for (int x = -visibleWidthAtZero; x <= visibleWidthAtZero; x++)
 		for (int y = -visibleHeightAtZero; y <= visibleHeightAtZero; y++)
+		for (int z = -3; z < 3; z++)
 			if ((x == -visibleWidthAtZero || x == visibleWidthAtZero || y == -visibleHeightAtZero || y == visibleHeightAtZero) && y != -visibleWidthAtZero)
-				for (int z = -3; z < 3; z++)
-					bounds.push(new Brick(x, y, z, BRICK_SIZE));
+					bounds.push(new Brick(x, y, z, WALL_SIZE, GRAY));
+			else
+				if (y > 0) bricks.push(new Brick(x,y,z,BRICK_SIZE, YELLOW));
 
 	/* --- Glut settings ---*/
 	// Lighting

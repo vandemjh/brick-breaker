@@ -67,9 +67,9 @@ void Paddle::draw() {
 
 //Updates the vertices matrix
 void Paddle::update() {
-	if (leftMomentum && x > -7)
+	if (leftMomentum && x > -6)
 		x -= speed;
-	if (rightMomentum && x < 7)
+	if (rightMomentum && x < 6)
 		x += speed;
 	if (forwardMomentum && z > -2)
 		z -= speed;

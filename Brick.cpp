@@ -4,12 +4,14 @@
 #include <math.h>
 #include <string>
 
+float DEFAULT[4] = {0.8, 0.8, 0.8, 0.0};
+
 using namespace std;
 
 static int brickCount = 0;
 class Brick {
       public:
-	float material[4] = {0.8, 0.8, 0.8, 0.0};
+	float color[4];
 	float normals[6][3] = { // Normals for all faces
 	    {-1.0, 0.0, 0.0},
 	    {0.0, 1.0, 0.0},
@@ -33,12 +35,13 @@ class Brick {
 
 	void draw();
 	string toString();
-	void init(float x, float y, float z, float size);
+	void init(float x, float y, float z, float size, float color[4]);
 
 	Brick();
 	~Brick();
 	Brick(float size);
 	Brick(float x, float y, float z, float size);
+	Brick(float x, float y, float z, float size, float color[4]);
 	bool collision(float x, float y, float z, float size);
 };
 
@@ -46,7 +49,10 @@ Brick::Brick() { id = -1; }
 // Constructor delegation
 Brick::Brick(float size) : Brick(0, 0, 0, size) {}
 
-Brick::Brick(float x, float y, float z, float size) { init(x, y, z, size); }
+//Default is gray
+Brick::Brick(float x, float y, float z, float size) : Brick(x, y, z, size, DEFAULT) {}
+
+Brick::Brick(float x, float y, float z, float size, float color[4]) { init(x, y, z, size, color); }
 Brick::~Brick() {
 	// Only need to free if 'alloc'd
 	// free(normals);
@@ -54,7 +60,11 @@ Brick::~Brick() {
 	// free(vertices);
 }
 
-void Brick::init(float x, float y, float z, float size) {
+void Brick::init(float x, float y, float z, float size, float color[4]) {
+	this->color[0] = color[0];
+	this->color[1] = color[1];
+	this->color[2] = color[2];
+	this->color[3] = color[3];
 	this->id = brickCount++;
 	this->x = x;
 	this->y = y;
@@ -75,7 +85,7 @@ void Brick::draw() {
 		return;
 	glBegin(GL_QUADS);
 	for (int i = 0; i < 6; i++) {
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, material);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 		// Adapted from example in man pages
 		glNormal3fv(&normals[i][0]); // 3 - dimensions, f - floats, v - vertices
 		glVertex3fv(&vertices[faces[i][0]][0]);
