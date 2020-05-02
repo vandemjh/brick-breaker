@@ -106,14 +106,20 @@ bool Group::collision(Ball ball) {
 			// Calculates which face is being collided with
 			if (
 			    distance(children[i]->xStart, children[i]->y, children[i]->z, ball) <
-			    distance(*children[i], ball))
+			    distance(*children[i], ball) ||
+			    distance(children[i]->xEnd, children[i]->y, children[i]->z, ball) <
+			    			    distance(*children[i], ball))
 				ball.rightMomentum = !ball.rightMomentum;
 			if (
 			    distance(children[i]->x, children[i]->yStart, children[i]->z, ball) <
+			    distance(*children[i], ball) ||
+			    distance(children[i]->x, children[i]->yEnd, children[i]->z, ball) <
 			    distance(*children[i], ball))
 				ball.upMomentum = !ball.upMomentum;
 			if (
 			    distance(children[i]->x, children[i]->y, children[i]->zStart, ball) <
+			    distance(*children[i], ball) ||
+			    distance(children[i]->x, children[i]->y, children[i]->zEnd, ball) <
 			    distance(*children[i], ball))
 				ball.forwardMomentum = !ball.forwardMomentum;
 
