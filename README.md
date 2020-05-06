@@ -1,3 +1,6 @@
+### About
+This project was created to learn OpenGL, CPP, and create an interesting game in 3d.
+
 ### To Run the Program
 Run the start script `run.sh`
 
